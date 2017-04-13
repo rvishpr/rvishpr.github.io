@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Vishnu PR</title>
+    <link>https://rvishpr.github.io/categories/</link>
+    <description>Recent content in Categories on Vishnu PR</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    
+	<atom:link href="https://rvishpr.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Networking</title>
+      <link>https://rvishpr.github.io/categories/networking/</link>
+      <pubDate>Wed, 12 Apr 2017 15:05:32 -0700</pubDate>
+      
+      <guid>https://rvishpr.github.io/categories/networking/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Systems</title>
+      <link>https://rvishpr.github.io/categories/systems/</link>
+      <pubDate>Wed, 12 Apr 2017 15:05:32 -0700</pubDate>
+      
+      <guid>https://rvishpr.github.io/categories/systems/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

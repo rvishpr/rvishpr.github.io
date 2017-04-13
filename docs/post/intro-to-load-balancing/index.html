@@ -1,0 +1,756 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        
+            
+                <title>Intro to Load Balancing</title>
+            
+        
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="generator" content="Hugo 0.20" />
+        
+
+
+        
+        
+            
+                <meta name="description" content="Powered by Hugo and Github">
+            
+        
+
+        
+
+  <meta name="twitter:card" content="summary"/>
+
+
+
+<meta name="twitter:text:title" content="Intro to Load Balancing"/>
+<meta name="twitter:title" content="Intro to Load Balancing"/>
+<meta name="twitter:description" content="Load balancing at its simplest is defined as distributing load across a group of servers, so they appear to the clients/users as one big server. Load balancing does more than simply distribute load. It helps with redundancy. It helps with scaling the service provided, without the users having to know about it. And more. I’ll attempt to capture some of it here. This can serve as an overview to load balancing."/>
+
+
+        <meta property="og:title" content="Intro to Load Balancing" />
+<meta property="og:description" content="Load balancing at its simplest is defined as distributing load across a group of servers, so they appear to the clients/users as one big server. Load balancing does more than simply distribute load. It helps with redundancy. It helps with scaling the service provided, without the users having to know about it. And more. I’ll attempt to capture some of it here. This can serve as an overview to load balancing." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://rvishpr.github.io/post/intro-to-load-balancing/" />
+
+
+
+<meta property="article:published_time" content="2017-04-12T15:05:32-07:00"/>
+<meta property="article:modified_time" content="2017-04-12T15:05:32-07:00"/>
+
+
+
+
+
+
+
+
+
+
+
+        
+<meta itemprop="name" content="Intro to Load Balancing">
+<meta itemprop="description" content="Load balancing at its simplest is defined as distributing load across a group of servers, so they appear to the clients/users as one big server. Load balancing does more than simply distribute load. It helps with redundancy. It helps with scaling the service provided, without the users having to know about it. And more. I’ll attempt to capture some of it here. This can serve as an overview to load balancing.">
+
+
+<meta itemprop="dateModified" content="2017-04-12T15:05:32-07:00" />
+<meta itemprop="wordCount" content="1590">
+
+
+
+<meta itemprop="keywords" content="networking,systems," />
+
+        
+
+        
+
+        
+        
+            
+        
+
+        
+        
+            <link rel="stylesheet" href="/css/google-font.css" />
+            <link rel="stylesheet" href="/css/font-awesome.min.css" />
+            <link rel="stylesheet" href="/css/main.css" />
+            <link rel="stylesheet" href="/css/add-on.css" />
+            <link rel="stylesheet" href="/css/monokai-sublime.css">
+        
+
+        
+
+        
+        
+        
+            
+        
+    </head>
+    <body>
+
+        
+        <div id="wrapper">
+
+    
+    
+<header id="header">
+    
+        <h2><a href="/">Vishnu&#39;s Blog</i></a></h2>
+    
+
+    <nav class="links">
+        <ul>
+            
+                <li>
+                    <a href="/about">
+                        About
+                    </a>
+                </li>
+            
+                <li>
+                    <a href="/categories/">
+                        Categories
+                    </a>
+                </li>
+            
+        </ul>
+    </nav>
+    <nav class="main">
+        <ul>
+            
+            <li id="share-nav" class="share-menu" style="display:none;">
+                <a class="fa-share-alt" href="#share-menu">Share</a>
+            </li>
+            
+            <li class="search">
+                <a class="fa-search" href="#search">Search</a>
+                <form id="search" method="get" action="//google.com/search">
+                    <input type="text" name="q" placeholder="Search" />
+                    <input type="hidden" name="q" value="site:https://rvishpr.github.io">
+                </form>
+            </li>
+            <li class="menu">
+                <a class="fa-bars" href="#menu">Menu</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+
+<section id="menu">
+
+    
+        <section>
+            <form class="search" method="get" action="//google.com/search">
+                <input type="text" name="q" placeholder="Search" />
+                <input type="hidden" name="q" value="site:https://rvishpr.github.io">
+            </form>
+        </section>
+
+    
+        <section>
+            <ul class="links">
+                
+                    <li>
+                        <a href="/about">
+                            <h3>
+                                
+                                About
+                            </h3>
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/categories/">
+                            <h3>
+                                
+                                Categories
+                            </h3>
+                        </a>
+                    </li>
+                
+            </ul>
+        </section>
+
+    
+        <section>
+            <ul class="links">
+                <header>
+                    <h3>Recent Posts</h3>
+                </header>
+                
+                    
+                
+
+                
+                    <li>
+                        <a href="https://rvishpr.github.io/post/intro-to-load-balancing/"><p>Intro to Load Balancing</p></a>
+                    </li>
+                
+                    <li>
+                        <a href="https://rvishpr.github.io/post/"><p>Posts</p></a>
+                    </li>
+                
+            </ul>
+        </section>
+
+    
+        
+</section>
+
+    <section id="share-menu">
+    <section id="social-share-nav">
+        <ul class="links">
+            <header>
+                <h3>Share this post <i class="fa fa-smile-o"></i></h3>
+            </header>
+            
+
+
+<li><a href="//twitter.com/share?url=https%3a%2f%2frvishpr.github.io%2fpost%2fintro-to-load-balancing%2f&text=Intro%20to%20Load%20Balancing&via=" target="_blank" class="share-btn twitter">
+    <i class="fa fa-twitter"></i>
+    <p>Twitter</p>
+</a></li>
+
+
+<li><a href="//plus.google.com/share?url=https%3a%2f%2frvishpr.github.io%2fpost%2fintro-to-load-balancing%2f" target="_blank" class="share-btn google-plus">
+    <i class="fa fa-google-plus"></i>
+    <p>Google+</p>
+</a></li>
+
+
+<li><a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2frvishpr.github.io%2fpost%2fintro-to-load-balancing%2f" target="_blank" class="share-btn facebook">
+    <i class="fa fa-facebook"></i>
+    <p>Facebook</p>
+</a></li>
+
+
+<li><a href="//reddit.com/submit?url=https%3a%2f%2frvishpr.github.io%2fpost%2fintro-to-load-balancing%2f&title=Intro%20to%20Load%20Balancing" target="_blank" class="share-btn reddit">
+    <i class="fa fa-reddit-alien"></i>
+    <p>Reddit</p>
+</a></li>
+
+
+<li><a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2frvishpr.github.io%2fpost%2fintro-to-load-balancing%2f&title=Intro%20to%20Load%20Balancing" target="_blank" class="share-btn linkedin">
+    <i class="fa fa-linkedin"></i>
+    <p>LinkedIn</p>
+</a></li>
+
+
+<li><a href="//www.stumbleupon.com/submit?url=https%3a%2f%2frvishpr.github.io%2fpost%2fintro-to-load-balancing%2f&title=Intro%20to%20Load%20Balancing" target="_blank" class="share-btn stumbleupon">
+    <i class="fa fa-stumbleupon"></i>
+    <p>StumbleUpon</p>
+</a></li>
+
+
+<li><a href="mailto:?subject=Check out this post by &body=https%3a%2f%2frvishpr.github.io%2fpost%2fintro-to-load-balancing%2f" target="_blank" class="share-btn email">
+    <i class="fa fa-envelope"></i>
+    <p>Email</p>
+</a></li>
+
+        </ul>
+    </section>
+</section>
+
+    
+    <div id="main">
+        
+        
+        <article class="post">
+    <header>
+    <div class="title">
+        
+            <h1><a href="https://rvishpr.github.io/post/intro-to-load-balancing/">Intro to Load Balancing</a></h1>
+            
+        
+        
+    </div>
+    <div class="meta">
+        
+            
+        
+
+        <time class="published"
+            datetime='2017-04-12'>
+            April 12, 2017</time>
+        <span class="author"></span>
+        
+            <p>8 minute read</p>
+        
+        
+    </div>
+</header>
+
+
+    <section id="social-share">
+        <ul class="icons">
+            
+
+
+<li><a href="//twitter.com/share?url=https%3a%2f%2frvishpr.github.io%2fpost%2fintro-to-load-balancing%2f&text=Intro%20to%20Load%20Balancing&via=" target="_blank" class="share-btn twitter">
+    <i class="fa fa-twitter"></i>
+    <p>Twitter</p>
+</a></li>
+
+
+<li><a href="//plus.google.com/share?url=https%3a%2f%2frvishpr.github.io%2fpost%2fintro-to-load-balancing%2f" target="_blank" class="share-btn google-plus">
+    <i class="fa fa-google-plus"></i>
+    <p>Google+</p>
+</a></li>
+
+
+<li><a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2frvishpr.github.io%2fpost%2fintro-to-load-balancing%2f" target="_blank" class="share-btn facebook">
+    <i class="fa fa-facebook"></i>
+    <p>Facebook</p>
+</a></li>
+
+
+<li><a href="//reddit.com/submit?url=https%3a%2f%2frvishpr.github.io%2fpost%2fintro-to-load-balancing%2f&title=Intro%20to%20Load%20Balancing" target="_blank" class="share-btn reddit">
+    <i class="fa fa-reddit-alien"></i>
+    <p>Reddit</p>
+</a></li>
+
+
+<li><a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2frvishpr.github.io%2fpost%2fintro-to-load-balancing%2f&title=Intro%20to%20Load%20Balancing" target="_blank" class="share-btn linkedin">
+    <i class="fa fa-linkedin"></i>
+    <p>LinkedIn</p>
+</a></li>
+
+
+<li><a href="//www.stumbleupon.com/submit?url=https%3a%2f%2frvishpr.github.io%2fpost%2fintro-to-load-balancing%2f&title=Intro%20to%20Load%20Balancing" target="_blank" class="share-btn stumbleupon">
+    <i class="fa fa-stumbleupon"></i>
+    <p>StumbleUpon</p>
+</a></li>
+
+
+<li><a href="mailto:?subject=Check out this post by &body=https%3a%2f%2frvishpr.github.io%2fpost%2fintro-to-load-balancing%2f" target="_blank" class="share-btn email">
+    <i class="fa fa-envelope"></i>
+    <p>Email</p>
+</a></li>
+
+        </ul>
+    </section>
+    
+
+    <div id="content">
+        
+
+<p>Load balancing at its simplest is defined as distributing load across a group of servers, so they appear to the clients/users as one big server. Load balancing does more than simply distribute load. It helps with redundancy. It helps with scaling the service provided, without the users having to know about it. And more. I’ll attempt to capture some of it here. This can serve as an overview to load balancing.</p>
+
+<p>First, some definitions.</p>
+
+<p><strong>Scaling</strong>. This is more important now than ever considering the size of the internet. This refers to the ability to increase/decrease the capability to handle load (by processing power and other resources) according to demand, without any disruption of the service provided.</p>
+
+<p><strong>Redundancy/High-Availability</strong>. This refers to having more resources to take over in case of failures, to provide seamless service to the users. It can be provided by adding servers that wait on the sidelines to take over when needed. Or, it can be done by designing a stateless system where there are multiple servers running, and one can simply take over from another in case of failure.</p>
+
+<p><strong>Client</strong>. The entity which requests a resource/service.</p>
+
+<p><strong>Server</strong>. The entity which provides the resource/service.</p>
+
+<p>People often wonder what makes a site like Facebook tick. Why is it hard to design a site like that? Anyone with enough web-development chops can put together a website. Why can’t we?</p>
+
+<p>What makes it difficult is the ability to scale to millions, why billions, of users, while providing uninterrupted service under any type of load. An analogy is that anyone can make a dozen cookies, and make them taste better than the ones bought at a store. But can they make thousands of them at a time? Millions of them? That then brings into the question of how to source the ingredients, how to make the dough for such numbers of them, how to bake them all, and how to store and deliver them. That is what makes the problem interesting. Sites like Facebook are like that. While anyone can create the next great social networking site, handling the sheer scale of the internet is what makes a site tick or fail and crumble like a thousand others.</p>
+
+<p>Not long ago, creating a website meant buying servers and hosting the website on them. But now, tools like AWS, Google Cloud, etc make such an effort unnecessary. But it is still important to understand how to design a scalable system.</p>
+
+<p>Anyone wanting to create a website can buy a domain and a few servers and put together a website with a system that can then be used. But, when it starts to become popular and gets more traffic, it will need better and more powerful servers to handle the load. Replacing the old ones would mean downtime and more expense every time it came to replacing them. But, if the servers are designed to be run in parallel, we can simply place another server in front of them to distribute the traffic across the servers now running in parallel. We can increase resources by simply adding more servers to the pool now, without having to bring down or replace the entire system. This new server in front then becomes the load balancer.</p>
+
+<p>This changes the question now to – how to distribute the load across the servers? First let’s see what types of load balancing are out there.</p>
+
+<h2 id="types-of-load-balancing">Types of Load balancing</h2>
+
+<h3 id="round-robin-dns">Round Robin DNS</h3>
+
+<p>Load Balancing comes in several types. The simples of them is Round Robin DNS. This is simply using the fact whenever a client needs to access a website, it needs to resolve the domain name (such as <a href="http://www.google.com">http://www.google.com</a>) into reachable IP addresses. In simple terms, the DNS server which will return the IP addresses can decide in which order to return them in. For Client A, it can return 1, 2, 3 and for Client B, it can return 2, 3, 1. The clients can choose the first address on the list and hence this can function as a simple load balancer.</p>
+
+<pre><code>$nslookup www.wordpress.com
+Server: 10.0.2.3
+Address: 10.0.2.3#53
+
+Non-authoritative answer:
+www.wordpress.com canonical name = lb.wordpress.com.
+Name: lb.wordpress.com
+Address: 192.0.78.13
+Name: lb.wordpress.com
+Address: 192.0.78.12
+</code></pre>
+
+<p>This can also be leveraged to implement client-side load balancing where the client can try each IP in turn in case of failures. This provides some level of redundancy too.</p>
+
+<p>This scheme, however simple, has problems. What happens when one of the servers on the list is down and the DNS administrators for the domain fail to update it in time? Also, how do we account for DNS caching behavior? Despite such problems, this is popular for its simplicity and can, even now, help in geographically distributing the load across data centers.</p>
+
+<p>Inside a data center, however, other schemes must be used.</p>
+
+<h3 id="l3-l4-load-balancing">L3/L4 Load balancing</h3>
+
+<p>This is server side load balancing done at the network and transport layers respectively of the networking stack.</p>
+
+<p>L3 load balancing is when routing decisions are taken based on the packet’s source and destination IP addresses. L4 Load balancing is when the source and destination IP address and port information is used to route traffic across server instances. For example, HTTP(80) traffic and HTTPS(443) traffic can be redirected differently from, say SIP traffic on port 5060.</p>
+
+<p>Servers can be chosen in different ways. Round robin is a simple way here. Or, the IP+Port information can be hashed to decide the server. This can at least ensure some level of predictability in allocating clients to servers. More on this later.</p>
+
+<p>Now the load balancer can act like a proxy, where it terminates TCP connection and establishes one with the server chosen or do NAT (Network Address Translation) where it simply forwards requests to the chosen server and receive the responses and sends them back to the client. In these cases, the IP address of the packet is changed accordingly. Or it can run in a mode called Direct Server Return (DSR), where the load balancer simply chooses the server and forwards the request after changing only the MAC address in the packet, and the server then directly responds to the client. In this case, the load balancer and the servers are all assigned the same Virtual IP Address(VIP), but only the load balancer will respond to ARP requests. This can be done by assigning the VIP in the loopback interface in the servers.</p>
+
+<p>This type of load balancing is relatively inexpensive as compared to L7, although the differences are diminishing with all the improvements in technology.</p>
+
+<h3 id="l7-load-balancing">L7 Load balancing</h3>
+
+<p>This operates at the highest layer(s) of the networking stack. Here decisions on how to route the traffic are taken based on the application payload. For example, for HTTP requests, the request (URL or cookie for example) can be parsed and based on the headers/payload routing can be performed. This server should terminate the TCP connection from the client and either re-originate one with the server chosen or re-use from a pool of connections maintained.</p>
+
+<p>More functionality can be added here, such as redirecting requests to the right server based on the request, such as for images or videos or quote requests, etc.</p>
+
+<h3 id="more-to-load-balancing">More to load balancing</h3>
+
+<p>Load balancers are simply servers that sit in front of a cluster of different servers to distribute the load. This shouldn’t become a ‘single point of failure’ (SPOF). The load balancers need to be run in high availability mode with more servers to take over in case of failures, while remaining in sync with the active server.</p>
+
+<p>Load balancing also provides high availability to the servers in the cluster. When the servers can run in parallel, where many run the same backend, failure of one means the requests can simply be redirected to others. Also scaling here becomes easier, since we simply need to add more servers in case of an increase in load. But, the servers here need to be stateless, so it wouldn’t matter which server serves a request. This is not always the case.</p>
+
+<h4 id="persistence-stickiness">Persistence/Stickiness</h4>
+
+<p>A lot of requests need to preserve state, such as a shopping cart, or a wish list for examples.</p>
+
+<p>Some implementations use ‘stickiness’ as a factor when distributing load, where requests from the same client go to the same server. This can be done by storing information in cookies, or URL rewriting(this may not be secure, since malicious clients can change URLS and send requests), or decide based on the client’s IP+Port information. Usually some combination of these in addition to others is adopted to implement this stickiness. This should still lead to the question of how HA is now possible if a single server is attached to a session. What happens when this server fails? The session information could then be lost.</p>
+
+<p>In this case the state needs to be in a persistent store, so failure of a server doesn’t mean loss of data. Some in memory databases such as redis or memcached can be leveraged for this.  This is not trivial since database read and write operations are not usually expensive and even for in-memory databases, we need to replicate/backup the data often to prevent the database from becoming a SPOF.</p>
+
+<p>Usually, just one form of load balancing is not enough. L3 load balancers sit in front of a cluster of L4 balancers which in turn distribute to a cluster of L7 balancers which eventually distribute traffic to the servers. For an example of this, we can look at Facebook’s implementation which is presented in a nice talk at Building a billion user load balancer.</p>
+
+    </div>
+
+    <footer>
+        <ul class="stats">
+    
+        
+
+        
+        
+            <li>
+                
+                
+                    
+
+                    
+
+                    
+
+                    
+                        Categories
+                    
+                
+            </li>
+        
+    
+
+    
+    
+        <li><a href='/categories/systems'>systems</a></li>
+    
+        <li><a href='/categories/networking'>networking</a></li>
+    
+</ul>
+
+    </footer>
+</article>
+<ul class="actions pagination">
+    
+
+    
+</ul>
+
+
+
+    
+        <article class="post">
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'shortname';
+    var disqus_identifier = 'https:\/\/rvishpr.github.io\/post\/intro-to-load-balancing\/';
+    var disqus_title = 'Intro to Load Balancing';
+    var disqus_url = 'https:\/\/rvishpr.github.io\/post\/intro-to-load-balancing\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </article>
+    
+
+
+    </div>
+    
+<section id="sidebar">
+
+    
+        <section id="intro">
+            
+            
+                
+                    <a href="/" class="logo"><img src="/images/earth.jpg" alt="Hugo Future Imperfect" /></a>
+                
+            
+            
+                <header>
+                    <h2>Vishnu PR</h2>
+                    <p>Powered by Hugo</p>
+                </header>
+            
+            <ul class="icons">
+                
+                
+                    
+<li><a href="//github.com/rvishpr" target="_blank" title="GitHub" class="fa fa-github"></a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+            </ul>
+        </section>
+
+    
+        <section id="recent-posts">
+            <ul class="posts">
+                <header>
+                    <h3>Recent Posts</h3>
+                </header>
+                
+                    
+                
+
+                
+                    
+                
+
+                
+                    <li>
+                        <article>
+                            <header>
+                                <h3><a href="https://rvishpr.github.io/post/">Posts</a></h3>
+                                
+                                    
+                                
+                                <time class="published" datetime=
+                                    '2017-04-12'>
+                                    April 12, 2017</time>
+                            </header>
+                        </article>
+                    </li>
+                
+                    <li>
+                        <article>
+                            <header>
+                                <h3><a href="https://rvishpr.github.io/post/intro-to-load-balancing/">Intro to Load Balancing</a></h3>
+                                
+                                    
+                                
+                                <time class="published" datetime=
+                                    '2017-04-12'>
+                                    April 12, 2017</time>
+                            </header>
+                        </article>
+                    </li>
+                
+
+                
+            </ul>
+        </section>
+
+    
+    
+    
+    
+        <section id="categories">
+            <ul class="posts">
+                <header>
+                    <h3><a href="/categories/">Categories</a></h3>
+                </header>
+
+                
+                    
+                
+
+                
+                    <li>
+                        <article>
+                            <header>
+                                <a href="/categories/networking/">networking</a>
+                                <span style="float:right;">1</span>
+                            </header>
+                        </article>
+                    </li>
+                
+                    <li>
+                        <article>
+                            <header>
+                                <a href="/categories/systems/">systems</a>
+                                <span style="float:right;">1</span>
+                            </header>
+                        </article>
+                    </li>
+                
+            </ul>
+        </section>
+    
+
+    
+        
+        <section class="blurb">
+            <h2>About</h2>
+            <p>Engineer. Blogger. Loves clichés</p>
+
+            <ul class="actions">
+                <li><a href="/about/" class="button">Learn More</a></li>
+            </ul>
+        </section>
+        
+
+    
+        <section id="footer">
+            <ul class="icons">
+                
+                
+                    
+<li><a href="//github.com/rvishpr" target="_blank" title="GitHub" class="fa fa-github"></a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+            </ul>
+
+            <p class="copyright">&copy; Vishnu PR. Design: <a href="http://html5up.net" target="_blank">HTML5 UP</a>. Ported by <a href="//github.com/jpescador" target="_blank">Julio Pescador</a>. Powered by <a href="//gohugo.io" target="_blank">Hugo</a></p>
+        </section>
+
+</section>
+
+            </div>
+        <a id="back-to-top" href="#" class="fa fa-arrow-up fa-border fa-2x"></a>
+        
+
+        
+        
+            
+        
+
+        
+        
+            <script src="/js/jquery.min.js"></script>
+            <script src="/js/skel.min.js"></script>
+            <script src="/js/util.js"></script>
+            <script src="/js/main.js"></script>
+            <script src="/js/backToTop.js"></script>
+            <script src="/js/highlight.pack.js"></script>
+        
+
+        
+
+            
+            <script>hljs.initHighlightingOnLoad();</script>
+            
+    </body>
+</html>
+

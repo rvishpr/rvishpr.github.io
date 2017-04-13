@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Networking on Vishnu PR</title>
+    <link>https://rvishpr.github.io/categories/networking/</link>
+    <description>Recent content in Networking on Vishnu PR</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 12 Apr 2017 15:05:32 -0700</lastBuildDate>
+    
+	<atom:link href="https://rvishpr.github.io/categories/networking/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Intro to Load Balancing</title>
+      <link>https://rvishpr.github.io/post/intro-to-load-balancing/</link>
+      <pubDate>Wed, 12 Apr 2017 15:05:32 -0700</pubDate>
+      
+      <guid>https://rvishpr.github.io/post/intro-to-load-balancing/</guid>
+      <description>Load balancing at its simplest is defined as distributing load across a group of servers, so they appear to the clients/users as one big server. Load balancing does more than simply distribute load. It helps with redundancy. It helps with scaling the service provided, without the users having to know about it. And more. I’ll attempt to capture some of it here. This can serve as an overview to load balancing.</description>
+    </item>
+    
+  </channel>
+</rss>
