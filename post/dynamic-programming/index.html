@@ -60,7 +60,7 @@
 
 
 <meta itemprop="dateModified" content="2017-04-17T14:46:03-07:00" />
-<meta itemprop="wordCount" content="2399">
+<meta itemprop="wordCount" content="2439">
 
 
 
@@ -357,7 +357,7 @@
 
 <p>This simply means that the optimal solution to the actual problem is a combination of the optimal solutions to its sub-problems. This will become clearer as we look at Examples, but a quick look at Dijkstra&rsquo;s algorithm for single-source shortest path computation will help us understand this. In that, we repeatedly compute the shortest so-far from a source, by storing the vertices in a priority queue, weighted by their distance from the source. So the shortest distance from a node <code>s</code> to a node <code>n</code>  will be</p>
 
-<pre><code>d(s,n) = d(s,m) + e(m,n) 
+<pre><code>d(s,n) = d(s,m) + e(m,n)
 </code></pre>
 
 <p>where <code>e(m,n)</code> is the length of the edge from m to n. In this case, the optimal substructure is that the shortest distance from s to n is the shortest distance from s to m + the edge from m to n. <strong>Recursion</strong> plays a big role in visualizing these problems and is usually the first approach to solving such problems.</p>
@@ -477,7 +477,7 @@
 
 <pre><code>func change(amount int, coins []int) int {
     cache := make([][]int, amount+1)
-    
+
     for i := 0; i &lt;= amount; i++ {
         cache[i] = make([]int, len(coins) + 1)
     }
@@ -492,7 +492,7 @@
                 //cached optimal sub-problem solution
                 cache[j][i] = cache[j - coins[i-1]][i]
             }
-            
+
             cache[j][i] = cache[j][i] + cache[j][i-1]
         }
     }
@@ -524,7 +524,7 @@ If V &gt; 0 {
     }
 
     seen := make([]int, amount + 1)
-    for i := 1; i &lt;= amount; i++ { 
+    for i := 1; i &lt;= amount; i++ {
         min := 4111111111
         for _, coin := range coins {
             res := -1
@@ -592,8 +592,11 @@ m[v,w] = max(m[v-1,w], m[v-1, w-W[v]] + V[v]) if w &gt; V[v]
             }
         }
     }
+    maxValue = cache[V][capacity]
 }
 </code></pre>
+
+<p>Understanding this problem can help solve a great many problems. One of them is the N-sum problem where given an array of integers, we need to know if a subset of them can sum up to N.</p>
 
 <h3 id="edit-distance">Edit Distance</h3>
 
@@ -628,7 +631,7 @@ else D(i,j) = min{D(i,j-1) + 1,   //insertion
 func minDistance(word1 string, word2 string) int {
     I := len(word1)
     J := len(word2)
-    
+
     //Dij represents the edit distance between word1[0...i-1] and word2[0...j-1].
     //Do D0j = j, Di0 = i, since the edit distance between word[0...n-1] and an empty string is n+1
     D := make([][]int, I+1)
@@ -638,7 +641,7 @@ func minDistance(word1 string, word2 string) int {
     for i := range D {
         D[i][0] = i
     }
-    
+
     for j := range D[0] {
         D[0][j] = j
     }
