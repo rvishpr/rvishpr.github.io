@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://rvishpr.github.io/post/dynamic-programming/</loc>
+    <lastmod>2017-04-17T14:46:03-07:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://rvishpr.github.io/post/intro-to-load-balancing/</loc>
     <lastmod>2017-04-12T15:05:32-07:00</lastmod>
   </url>
@@ -12,7 +17,14 @@
   </url>
   
   <url>
+    <loc>https://rvishpr.github.io/categories/algorithms/</loc>
+    <lastmod>2017-04-17T14:46:03-07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://rvishpr.github.io/categories/</loc>
+    <lastmod>2017-04-17T14:46:03-07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -24,7 +36,13 @@
   
   <url>
     <loc>https://rvishpr.github.io/post/</loc>
-    <lastmod>2017-04-12T15:05:32-07:00</lastmod>
+    <lastmod>2017-04-17T14:46:03-07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://rvishpr.github.io/categories/programming/</loc>
+    <lastmod>2017-04-17T14:46:03-07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -36,7 +54,7 @@
   
   <url>
     <loc>https://rvishpr.github.io/</loc>
-    <lastmod>2017-04-12T15:05:32-07:00</lastmod>
+    <lastmod>2017-04-17T14:46:03-07:00</lastmod>
     <priority>0</priority>
   </url>
   
