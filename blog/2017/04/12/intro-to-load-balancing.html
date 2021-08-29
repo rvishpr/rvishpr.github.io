@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Introduction to Load Balancing! | Vishnu Raghavan</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Introduction to Load Balancing!" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Load balancing at its simplest is defined as distributing load across a group of servers, so they appear to the clients/users as one big server. Load balancing does more than simply distribute load. It helps with redundancy. It helps with scaling the service provided, without the users having to know about it. And more. I’ll attempt to capture some of it here. This can serve as an overview to load balancing." />
+<meta property="og:description" content="Load balancing at its simplest is defined as distributing load across a group of servers, so they appear to the clients/users as one big server. Load balancing does more than simply distribute load. It helps with redundancy. It helps with scaling the service provided, without the users having to know about it. And more. I’ll attempt to capture some of it here. This can serve as an overview to load balancing." />
+<link rel="canonical" href="http://localhost:4002/blog/2017/04/12/intro-to-load-balancing.html" />
+<meta property="og:url" content="http://localhost:4002/blog/2017/04/12/intro-to-load-balancing.html" />
+<meta property="og:site_name" content="Vishnu Raghavan" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-04-12T10:11:03-07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Introduction to Load Balancing!" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4002/blog/2017/04/12/intro-to-load-balancing.html"},"url":"http://localhost:4002/blog/2017/04/12/intro-to-load-balancing.html","headline":"Introduction to Load Balancing!","dateModified":"2017-04-12T10:11:03-07:00","datePublished":"2017-04-12T10:11:03-07:00","description":"Load balancing at its simplest is defined as distributing load across a group of servers, so they appear to the clients/users as one big server. Load balancing does more than simply distribute load. It helps with redundancy. It helps with scaling the service provided, without the users having to know about it. And more. I’ll attempt to capture some of it here. This can serve as an overview to load balancing.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4002/feed.xml" title="Vishnu Raghavan" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Vishnu Raghavan</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Introduction to Load Balancing!</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2017-04-12T10:11:03-07:00" itemprop="datePublished">Apr 12, 2017
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Load balancing at its simplest is defined as distributing load across a group of servers, so they appear to the clients/users as one big server. Load balancing does more than simply distribute load. It helps with redundancy. It helps with scaling the service provided, without the users having to know about it. And more. I’ll attempt to capture some of it here. This can serve as an overview to load balancing.</p>
+
+<p>First, some definitions.</p>
+
+<p><strong>Scaling</strong>. This is more important now than ever considering the size of the internet. This refers to the ability to increase/decrease the capability to handle load (by processing power and other resources) according to demand, without any disruption of the service provided.</p>
+
+<p><strong>Redundancy/High-Availability</strong>. This refers to having more resources to take over in case of failures, to provide seamless service to the users. It can be provided by adding servers that wait on the sidelines to take over when needed. Or, it can be done by designing a stateless system where there are multiple servers running, and one can simply take over from another in case of failure.</p>
+
+<p><strong>Client</strong>. The entity which requests a resource/service.</p>
+
+<p><strong>Server</strong>. The entity which provides the resource/service.</p>
+
+<p>People often wonder what makes a site like Facebook tick. Why is it hard to design a site like that? Anyone with enough web-development chops can put together a website. Why can’t we?</p>
+
+<p>What makes it difficult is the ability to scale to millions, why billions, of users, while providing uninterrupted service under any type of load. An analogy is that anyone can make a dozen cookies, and make them taste better than the ones bought at a store. But can they make thousands of them at a time? Millions of them? That then brings into the question of how to source the ingredients, how to make the dough for such numbers of them, how to bake them all, and how to store and deliver them. That is what makes the problem interesting. Sites like Facebook are like that. While anyone can create the next great social networking site, handling the sheer scale of the internet is what makes a site tick or fail and crumble like a thousand others.</p>
+
+<p>Not long ago, creating a website meant buying servers and hosting the website on them. But now, tools like AWS, Google Cloud, etc make such an effort unnecessary. But it is still important to understand how to design a scalable system.</p>
+
+<p>Anyone wanting to create a website can buy a domain and a few servers and put together a website with a system that can then be used. But, when it starts to become popular and gets more traffic, it will need better and more powerful servers to handle the load. Replacing the old ones would mean downtime and more expense every time it came to replacing them. But, if the servers are designed to be run in parallel, we can simply place another server in front of them to distribute the traffic across the servers now running in parallel. We can increase resources by simply adding more servers to the pool now, without having to bring down or replace the entire system. This new server in front then becomes the load balancer.</p>
+
+<p>This changes the question now to – how to distribute the load across the servers? First let’s see what types of load balancing are out there.</p>
+
+<h1 id="types-of-load-balancing">TYPES OF LOAD BALANCING</h1>
+<h2 id="round-robin-dns">ROUND ROBIN DNS</h2>
+<p>Load Balancing comes in several types. The simples of them is Round Robin DNS. This is simply using the fact whenever a client needs to access a website, it needs to resolve the domain name (such as http://www.google.com) into reachable IP addresses. In simple terms, the DNS server which will return the IP addresses can decide in which order to return them in. For Client A, it can return 1, 2, 3 and for Client B, it can return 2, 3, 1. The clients can choose the first address on the list and hence this can function as a simple load balancer.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="vg">$nslookup</span> <span class="n">www</span><span class="p">.</span><span class="nf">wordpress</span><span class="p">.</span><span class="nf">com</span>
+<span class="no">Server</span><span class="p">:</span> <span class="mf">10.0</span><span class="o">.</span><span class="mf">2.3</span>
+<span class="no">Address</span><span class="p">:</span> <span class="mf">10.0</span><span class="o">.</span><span class="mf">2.3</span><span class="c1">#53</span>
+
+<span class="no">Non</span><span class="o">-</span><span class="n">authoritative</span> <span class="ss">answer:
+</span><span class="n">www</span><span class="p">.</span><span class="nf">wordpress</span><span class="p">.</span><span class="nf">com</span> <span class="n">canonical</span> <span class="nb">name</span> <span class="o">=</span> <span class="n">lb</span><span class="p">.</span><span class="nf">wordpress</span><span class="p">.</span><span class="nf">com</span><span class="o">.</span>
+<span class="no">Name</span><span class="p">:</span> <span class="n">lb</span><span class="p">.</span><span class="nf">wordpress</span><span class="p">.</span><span class="nf">com</span>
+<span class="no">Address</span><span class="p">:</span> <span class="mf">192.0</span><span class="o">.</span><span class="mf">78.13</span>
+<span class="no">Name</span><span class="p">:</span> <span class="n">lb</span><span class="p">.</span><span class="nf">wordpress</span><span class="p">.</span><span class="nf">com</span>
+<span class="no">Address</span><span class="p">:</span> <span class="mf">192.0</span><span class="o">.</span><span class="mf">78.12</span></code></pre></figure>
+
+<p>This can also be leveraged to implement client-side load balancing where the client can try each IP in turn in case of failures. This provides some level of redundancy too.</p>
+
+<p>This scheme, however simple, has problems. What happens when one of the servers on the list is down and the DNS administrators for the domain fail to update it in time? Also, how do we account for DNS caching behavior? Despite such problems, this is popular for its simplicity and can, even now, help in geographically distributing the load across data centers.</p>
+
+<p>Inside a data center, however, other schemes must be used.</p>
+
+<h2 id="l3l4-load-balancing">L3/L4 LOAD BALANCING</h2>
+<p>This is server side load balancing done at the network and transport layers respectively of the networking stack.</p>
+
+<p>L3 load balancing is when routing decisions are taken based on the packet’s source and destination IP addresses. L4 Load balancing is when the source and destination IP address and port information is used to route traffic across server instances. For example, HTTP(80) traffic and HTTPS(443) traffic can be redirected differently from, say SIP traffic on port 5060.</p>
+
+<p>Servers can be chosen in different ways. Round robin is a simple way here. Or, the IP+Port information can be hashed to decide the server. This can at least ensure some level of predictability in allocating clients to servers. More on this later.</p>
+
+<p>Now the load balancer can act like a proxy, where it terminates TCP connection and establishes one with the server chosen or do NAT (Network Address Translation) where it simply forwards requests to the chosen server and receive the responses and sends them back to the client. In these cases, the IP address of the packet is changed accordingly. Or it can run in a mode called Direct Server Return (DSR), where the load balancer simply chooses the server and forwards the request after changing only the MAC address in the packet, and the server then directly responds to the client. In this case, the load balancer and the servers are all assigned the same Virtual IP Address(VIP), but only the load balancer will respond to ARP requests. This can be done by assigning the VIP in the loopback interface in the servers.</p>
+
+<p>This type of load balancing is relatively inexpensive as compared to L7, although the differences are diminishing with all the improvements in technology.</p>
+
+<h2 id="l7-load-balancing">L7 LOAD BALANCING</h2>
+<p>This operates at the highest layer(s) of the networking stack. Here decisions on how to route the traffic are taken based on the application payload. For example, for HTTP requests, the request (URL or cookie for example) can be parsed and based on the headers/payload routing can be performed. This server should terminate the TCP connection from the client and either re-originate one with the server chosen or re-use from a pool of connections maintained.</p>
+
+<p>More functionality can be added here, such as redirecting requests to the right server based on the request, such as for images or videos or quote requests, etc.</p>
+
+<h1 id="more-to-load-balancing">MORE TO LOAD BALANCING</h1>
+<p>Load balancers are simply servers that sit in front of a cluster of different servers to distribute the load. This shouldn’t become a ‘single point of failure’ (SPOF). The load balancers need to be run in high availability mode with more servers to take over in case of failures, while remaining in sync with the active server.</p>
+
+<p>Load balancing also provides high availability to the servers in the cluster. When the servers can run in parallel, where many run the same backend, failure of one means the requests can simply be redirected to others. Also scaling here becomes easier, since we simply need to add more servers in case of an increase in load. But, the servers here need to be stateless, so it wouldn’t matter which server serves a request. This is not always the case.</p>
+
+<h2 id="persistencestickiness">PERSISTENCE/STICKINESS</h2>
+<p>A lot of requests need to preserve state, such as a shopping cart, or a wish list for examples.</p>
+
+<p>Some implementations use ‘stickiness’ as a factor when distributing load, where requests from the same client go to the same server. This can be done by storing information in cookies, or URL rewriting(this may not be secure, since malicious clients can change URLS and send requests), or decide based on the client’s IP+Port information. Usually some combination of these in addition to others is adopted to implement this stickiness. This should still lead to the question of how HA is now possible if a single server is attached to a session. What happens when this server fails? The session information could then be lost.</p>
+
+<p>In this case the state needs to be in a persistent store, so failure of a server doesn’t mean loss of data. Some in memory databases such as redis or memcached can be leveraged for this. This is not trivial since database read and write operations are not usually expensive and even for in-memory databases, we need to replicate/backup the data often to prevent the database from becoming a SPOF.</p>
+
+<p>Usually, just one form of load balancing is not enough. L3 load balancers sit in front of a cluster of L4 balancers which in turn distribute to a cluster of L7 balancers which eventually distribute traffic to the servers. For an example of this, we can look at Facebook’s implementation which is presented in a nice talk at <a href="https://www.youtube.com/watch?v=bxhYNfFeVF4">Building a billion user load balancer</a>.</p>
+
+  </div><a class="u-url" href="/blog/2017/04/12/intro-to-load-balancing.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Vishnu Raghavan</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Vishnu Raghavan</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/rvishpr"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">rvishpr</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>This is my thoughts on what I&#39;ve been doing recently and anything I&#39;ve learned that I&#39;d like to document.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
