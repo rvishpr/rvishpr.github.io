@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Random ID generation in distributed systems! | Vishnu Raghavan</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Random ID generation in distributed systems!" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A problem faced by many distributed systems is how to generate an ID that is unique across all the machines in the system. We discuss some common approaches in this post." />
+<meta property="og:description" content="A problem faced by many distributed systems is how to generate an ID that is unique across all the machines in the system. We discuss some common approaches in this post." />
+<link rel="canonical" href="http://localhost:4001/blog/2019/01/29/random-id-generation-distsys.html" />
+<meta property="og:url" content="http://localhost:4001/blog/2019/01/29/random-id-generation-distsys.html" />
+<meta property="og:site_name" content="Vishnu Raghavan" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-01-29T08:23:45-08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Random ID generation in distributed systems!" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","url":"http://localhost:4001/blog/2019/01/29/random-id-generation-distsys.html","headline":"Random ID generation in distributed systems!","dateModified":"2019-01-29T08:23:45-08:00","datePublished":"2019-01-29T08:23:45-08:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4001/blog/2019/01/29/random-id-generation-distsys.html"},"description":"A problem faced by many distributed systems is how to generate an ID that is unique across all the machines in the system. We discuss some common approaches in this post.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4001/feed.xml" title="Vishnu Raghavan" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Vishnu Raghavan</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Random ID generation in distributed systems!</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-01-29T08:23:45-08:00" itemprop="datePublished">Jan 29, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>A problem faced by many distributed systems is how to generate an ID that is unique across all the machines in the system. We discuss some common approaches in this post.</p>
+
+<p>Some of the requirements can be:</p>
+
+<ul>
+  <li>Time-sortable — Once the IDs are generated, they may be required to be sortable by time (say to order photos by time).</li>
+  <li>Distributed — While some systems may use a single (or group of) server/system(s) for simplicity, some systems would prefer not to have such an implementation to avoid a single point of failure.</li>
+  <li>Scalable — no matter how many servers are added to the system, this should work with minimal to no changes.</li>
+</ul>
+
+<h1 id="db-auto-increment">DB Auto-increment</h1>
+
+<p>(Or DB Ticket servers)</p>
+
+<p>Simple systems using a database can take advantage of the auto-increment feature available in a lot of databases. (For example, MongoDB’s Object ID is 12 bytes long). First, looking at the advantages to this</p>
+
+<ul>
+  <li>Databases are well understood and a lot of engineers can use some database very easily.</li>
+  <li>Will be globally (globally =&gt; system wide) unique.</li>
+  <li>Will be monotonically increasing.</li>
+</ul>
+
+<p>There will be disadvantages to this also</p>
+
+<ul>
+  <li>Some businesses may be reluctant to move application logic to a database (what would happen if they move to a different database system?).</li>
+  <li>Must depend on the database provider’s guarantee to be globally unique (There may be some edge cases)</li>
+  <li>Single point of failure (even if the database is replicated in some form of master-master setup like in Flickr’s system). At the very least, this can introduce a bottleneck in the system where the application servers need to query the databases every time they need to generate an ID.</li>
+  <li>More complexity to the system — databases need managing. Also needs messaging, etc. to be implemented for the ID query channel.</li>
+</ul>
+
+<h1 id="ticket-server">Ticket Server</h1>
+<p>Ticker server (DB servers follow a similar layout)</p>
+
+<p><img src="/assets/ticket-servers.png" alt="Ticker Server" /></p>
+
+<p>This is basically an extension/modification of the above DB based ID generation systems. Here, some server(s) function simply to serve unique IDs. Similar advantages and disadvantages as above exist. While, this may be a simple implementation, this will still add to the problem of having to maintain and manage additional servers.</p>
+
+<p>There are systems like Twitter’s Snowflake service which aim to solve some of the issues mentioned above (like SPOF/bottlenecks, etc), but this may bring in other complexities like having to run ZooKeeper to co-ordinate nodes. This may still work in systems where ZooKeeper is already up and running and there is a willingness to maintain it.
+UUID</p>
+
+<p>There are several ways to generate UUIDs. A standard way is to use the logic presented in the RFC. This uses a combination of timestamp/random-number + node ID (MAC address usually) and other information. But, this is usually 128 bits (this may be subjective, but some systems prefer a 64 bit ID).</p>
+
+<p>Also, depending on the logic used, it may not be time-sortable. But, this is almost always guaranteed to be globally unique. So for systems where the above mentioned disadvantages are not an issue, then using UUIDs is a very good idea.
+Custom solutions</p>
+
+<p>While all the above solutions are perfectly valid under the right circumstances, there are other custom solutions which aim to provide a completely distributed solution with as few moving pieces as possible.</p>
+
+<p>An example is that used by Instagram to generate a 64 bit ID.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>41 bits for time in milliseconds (gives us 41 years of IDs with a custom epoch)
+
+13 bits that represent the logical shard ID
+
+10 bits that represent an auto-incrementing sequence, modulus 1024. This means we can generate 1024 IDs, per shard, per millisecond
+</code></pre></div></div>
+
+<p>Another example is Boundary Flake. As described by their github page:</p>
+
+<p>Flake ids are 128-bits wide described here from most significant to least significant bits.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>64-bit timestamp — milliseconds since the epoch (Jan 1 1970)
+
+48-bit worker id — MAC address from a configurable device
+
+16-bit sequence # — usually 0, incremented when more than one id is requested in the same millisecond and reset to 0 when the clock ticks forward
+</code></pre></div></div>
+
+<p>Such implementations have the advantage of being time-sortable, distributed (each note can generate its own ID independently as long as configured correctly) and simple to use. Some care has to be taken to understand this (especially the case when a local clock is used and it is rolled back). But, if done right, this can scale well and little to no configutation/change is needed when new servers are added to the system.</p>
+
+<h1 id="references">References</h1>
+
+<ul>
+  <li>Instagram’s ID generation logic: https://instagram-engineering.com/sharding-ids-at-instagram-1cf5a71e5a5c</li>
+  <li>https://www.slideshare.net/davegardnerisme/unique-id-generation-in-distributed-systems</li>
+  <li>MongoDB’s Object ID: https://www.mongodb.com/blog/post/generating-globally-unique-identifiers-for-use-with-mongodb</li>
+  <li>UUID IETF RFC: https://tools.ietf.org/html/rfc4122</li>
+</ul>
+
+  </div><a class="u-url" href="/blog/2019/01/29/random-id-generation-distsys.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Vishnu Raghavan</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Vishnu Raghavan</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/rvishpr"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">rvishpr</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>This is my thoughts on what I&#39;ve been doing recently and anything I&#39;ve learned that I&#39;d like to write about.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
