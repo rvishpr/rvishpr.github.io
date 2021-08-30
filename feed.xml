@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://localhost:4001/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4001/" rel="alternate" type="text/html" /><updated>2021-08-29T17:45:16-07:00</updated><id>http://localhost:4001/feed.xml</id><title type="html">Vishnu Raghavan</title><subtitle>This is my thoughts on what I've been doing recently and anything I've learned that I'd like to write about.</subtitle><entry><title type="html">Random ID generation in distributed systems!</title><link href="http://localhost:4001/blog/2019/01/29/random-id-generation-distsys.html" rel="alternate" type="text/html" title="Random ID generation in distributed systems!" /><published>2019-01-29T08:23:45-08:00</published><updated>2019-01-29T08:23:45-08:00</updated><id>http://localhost:4001/blog/2019/01/29/random-id-generation-distsys</id><content type="html" xml:base="http://localhost:4001/blog/2019/01/29/random-id-generation-distsys.html">&lt;p&gt;A problem faced by many distributed systems is how to generate an ID that is unique across all the machines in the system. We discuss some common approaches in this post.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://localhost:4001/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4001/" rel="alternate" type="text/html" /><updated>2021-08-29T17:50:49-07:00</updated><id>http://localhost:4001/feed.xml</id><title type="html">Vishnu Raghavan</title><subtitle>This is my thoughts on what I've been doing recently and anything I've learned that I'd like to write about.</subtitle><entry><title type="html">Random ID generation in distributed systems</title><link href="http://localhost:4001/blog/2019/01/29/random-id-generation-distsys.html" rel="alternate" type="text/html" title="Random ID generation in distributed systems" /><published>2019-01-29T08:23:45-08:00</published><updated>2019-01-29T08:23:45-08:00</updated><id>http://localhost:4001/blog/2019/01/29/random-id-generation-distsys</id><content type="html" xml:base="http://localhost:4001/blog/2019/01/29/random-id-generation-distsys.html">&lt;p&gt;A problem faced by many distributed systems is how to generate an ID that is unique across all the machines in the system. We discuss some common approaches in this post.&lt;/p&gt;
 
 &lt;p&gt;Some of the requirements can be:&lt;/p&gt;
 
@@ -48,33 +48,31 @@ Custom solutions&lt;/p&gt;
 
 &lt;p&gt;An example is that used by Instagram to generate a 64 bit ID.&lt;/p&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;41 bits for time in milliseconds (gives us 41 years of IDs with a custom epoch)
-
-13 bits that represent the logical shard ID
-
-10 bits that represent an auto-incrementing sequence, modulus 1024. This means we can generate 1024 IDs, per shard, per millisecond
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;41 bits for time in milliseconds (gives us 41 years of IDs with a custom epoch)&lt;/li&gt;
+  &lt;li&gt;13 bits that represent the logical shard ID&lt;/li&gt;
+  &lt;li&gt;10 bits that represent an auto-incrementing sequence, modulus 1024. This means we can generate 1024 IDs, per shard, per millisecond&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;Another example is Boundary Flake. As described by their github page:&lt;/p&gt;
 
 &lt;p&gt;Flake ids are 128-bits wide described here from most significant to least significant bits.&lt;/p&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;64-bit timestamp — milliseconds since the epoch (Jan 1 1970)
-
-48-bit worker id — MAC address from a configurable device
-
-16-bit sequence # — usually 0, incremented when more than one id is requested in the same millisecond and reset to 0 when the clock ticks forward
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;64-bit timestamp — milliseconds since the epoch (Jan 1 1970)&lt;/li&gt;
+  &lt;li&gt;48-bit worker id — MAC address from a configurable device&lt;/li&gt;
+  &lt;li&gt;16-bit sequence # — usually 0, incremented when more than one id is requested in the same millisecond and reset to 0 when the clock ticks forward&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;Such implementations have the advantage of being time-sortable, distributed (each note can generate its own ID independently as long as configured correctly) and simple to use. Some care has to be taken to understand this (especially the case when a local clock is used and it is rolled back). But, if done right, this can scale well and little to no configutation/change is needed when new servers are added to the system.&lt;/p&gt;
 
 &lt;h1 id=&quot;references&quot;&gt;References&lt;/h1&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;Instagram’s ID generation logic: https://instagram-engineering.com/sharding-ids-at-instagram-1cf5a71e5a5c&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://instagram-engineering.com/sharding-ids-at-instagram-1cf5a71e5a5c&quot;&gt;Instagram’s ID generation logic&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;https://www.slideshare.net/davegardnerisme/unique-id-generation-in-distributed-systems&lt;/li&gt;
-  &lt;li&gt;MongoDB’s Object ID: https://www.mongodb.com/blog/post/generating-globally-unique-identifiers-for-use-with-mongodb&lt;/li&gt;
-  &lt;li&gt;UUID IETF RFC: https://tools.ietf.org/html/rfc4122&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.mongodb.com/blog/post/generating-globally-unique-identifiers-for-use-with-mongodb&quot;&gt;MongoDB’s Object ID&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://tools.ietf.org/html/rfc4122&quot;&gt;UUID IETF RFC&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</content><author><name></name></author><category term="blog" /><summary type="html">A problem faced by many distributed systems is how to generate an ID that is unique across all the machines in the system. We discuss some common approaches in this post.</summary></entry><entry><title type="html">Introduction to Dynamic Programming!</title><link href="http://localhost:4001/blog/2017/04/17/intro-to-dynamic-programming.html" rel="alternate" type="text/html" title="Introduction to Dynamic Programming!" /><published>2017-04-17T11:29:57-07:00</published><updated>2017-04-17T11:29:57-07:00</updated><id>http://localhost:4001/blog/2017/04/17/intro-to-dynamic-programming</id><content type="html" xml:base="http://localhost:4001/blog/2017/04/17/intro-to-dynamic-programming.html">&lt;h1 id=&quot;overview&quot;&gt;Overview&lt;/h1&gt;
 
 &lt;p&gt;Not many who have left school use concepts such as Dynamic Programming on a day to day basis. Most only to come to them when preparing for an interview. However, this is a useful algorithmic technique and it helps to understand it. This post should provide an introduction to Dynamic Programming and after reading this, it should be possible to attempt the problems provided at the end with ease.&lt;/p&gt;
